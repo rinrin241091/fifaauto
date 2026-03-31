@@ -1,0 +1,13 @@
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.exe.config
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.exe
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.pdb
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.xml
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\bin\Debug\AutoItX3.Assembly.dll
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbprojResolveAssemblyReference.cache
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.Form1.resources
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.Resources.resources
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbproj.GenerateResource.Cache
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbproj.CoreCompileInputs.cache
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.exe
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.xml
+d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.pdb
