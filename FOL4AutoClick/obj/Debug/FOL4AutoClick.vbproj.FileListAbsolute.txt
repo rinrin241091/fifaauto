@@ -11,3 +11,17 @@ d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\F
 d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.exe
 d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.xml
 d:\Documents\Visual Studio 2017\Projects\FOL4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.pdb
+D:\fifa\FO4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.exe.config
+D:\fifa\FO4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.exe
+D:\fifa\FO4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.pdb
+D:\fifa\FO4AutoClick\FOL4AutoClick\bin\Debug\FOL4AutoClick.xml
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.Form1.resources
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.Resources.resources
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbproj.GenerateResource.Cache
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.exe
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.xml
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.pdb
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbproj.AssemblyReference.cache
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.exe.config
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4AutoClick.vbproj.CoreCompileInputs.cache
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Debug\FOL4Auto.58928B17.Up2Date

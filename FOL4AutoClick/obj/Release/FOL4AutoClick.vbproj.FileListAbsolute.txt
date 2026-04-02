@@ -1,0 +1,4 @@
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Release\FOL4AutoClick.vbprojResolveAssemblyReference.cache
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Release\FOL4AutoClick.Form1.resources
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Release\FOL4AutoClick.Resources.resources
+D:\fifa\FO4AutoClick\FOL4AutoClick\obj\Release\FOL4AutoClick.vbproj.GenerateResource.Cache
