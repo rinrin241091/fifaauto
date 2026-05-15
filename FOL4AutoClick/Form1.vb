@@ -19,11 +19,65 @@ Public Class Form1
     Private Shared Function PostMessage(hWnd As IntPtr, msg As UInteger, wParam As IntPtr, lParam As IntPtr) As Boolean
     End Function
 
+    <Runtime.InteropServices.DllImport("user32.dll")>
+    Private Shared Function SetForegroundWindow(hWnd As IntPtr) As Boolean
+    End Function
+
+    <Runtime.InteropServices.DllImport("user32.dll")>
+    Private Shared Function SendInput(nInputs As UInteger, pInputs As IntPtr, cbSize As Integer) As UInteger
+    End Function
+
+    <Runtime.InteropServices.DllImport("user32.dll")>
+    Private Shared Function SetCursorPos(x As Integer, y As Integer) As Boolean
+    End Function
+
+    <Runtime.InteropServices.DllImport("user32.dll")>
+    Private Shared Function GetCursorPos(ByRef lpPoint As WinPoint) As Boolean
+    End Function
+
     Private Const WM_LBUTTONDOWN As UInteger = &H201UI
     Private Const WM_LBUTTONUP As UInteger = &H202UI
     Private Const WM_KEYDOWN As UInteger = &H100UI
     Private Const WM_KEYUP As UInteger = &H101UI
     Private Const MK_LBUTTON As Integer = &H1
+    Private Const INPUT_MOUSE As Integer = 0
+    Private Const INPUT_KEYBOARD As Integer = 1
+    Private Const MOUSEEVENTF_LEFTDOWN As Integer = &H2
+    Private Const MOUSEEVENTF_LEFTUP As Integer = &H4
+    Private Const KEYEVENTF_KEYUP As Integer = &H2
+
+    <Runtime.InteropServices.StructLayout(Runtime.InteropServices.LayoutKind.Sequential)>
+    Private Structure INPUT
+        Public type As Integer
+        Public union As INPUTUNION
+    End Structure
+
+    <Runtime.InteropServices.StructLayout(Runtime.InteropServices.LayoutKind.Explicit)>
+    Private Structure INPUTUNION
+        <Runtime.InteropServices.FieldOffset(0)>
+        Public mi As MOUSEINPUT
+        <Runtime.InteropServices.FieldOffset(0)>
+        Public ki As KEYBDINPUT
+    End Structure
+
+    <Runtime.InteropServices.StructLayout(Runtime.InteropServices.LayoutKind.Sequential)>
+    Private Structure MOUSEINPUT
+        Public dx As Integer
+        Public dy As Integer
+        Public mouseData As Integer
+        Public dwFlags As Integer
+        Public time As Integer
+        Public dwExtraInfo As IntPtr
+    End Structure
+
+    <Runtime.InteropServices.StructLayout(Runtime.InteropServices.LayoutKind.Sequential)>
+    Private Structure KEYBDINPUT
+        Public wVk As Short
+        Public wScan As Short
+        Public dwFlags As Integer
+        Public time As Integer
+        Public dwExtraInfo As IntPtr
+    End Structure
 
     Private loopDelayMs As Integer = 300
     Private clickDelayMs As Integer = 500
@@ -582,6 +636,24 @@ Public Class Form1
     End Function
 
     Private Function IsLikelyGreenActionButton(colorHex As String) As Boolean
+        If Not IsGreenHex(colorHex) Then
+            Return False
+        End If
+
+        Dim sampleOffsets As (Integer, Integer)() = {(-10, 0), (0, 0), (10, 0), (0, 6), (0, -6)}
+        Dim matchCount As Integer = 0
+
+        For Each offset In sampleOffsets
+            Dim nearbyColor As String = GetColor.GETCOLOR(greenButtonX + offset.Item1, greenButtonY + offset.Item2)
+            If IsGreenHex(nearbyColor) Then
+                matchCount += 1
+            End If
+        Next
+
+        Return matchCount >= 2
+    End Function
+
+    Private Function IsGreenHex(colorHex As String) As Boolean
         If String.IsNullOrWhiteSpace(colorHex) Then
             Return False
         End If
@@ -600,7 +672,7 @@ Public Class Form1
             Dim g As Integer = Convert.ToInt32(normalized.Substring(2, 2), 16)
             Dim b As Integer = Convert.ToInt32(normalized.Substring(4, 2), 16)
 
-            Return g >= 170 AndAlso r <= 120 AndAlso b <= 120
+            Return g >= 140 AndAlso r <= 130 AndAlso b <= 130
         Catch
             Return False
         End Try
@@ -612,10 +684,12 @@ Public Class Form1
             Return
         End If
 
-        Dim lParam As IntPtr = MakeLParam(x, y)
-        PostMessage(hWnd, WM_LBUTTONDOWN, CType(MK_LBUTTON, IntPtr), lParam)
-        System.Threading.Thread.Sleep(20)
-        PostMessage(hWnd, WM_LBUTTONUP, IntPtr.Zero, lParam)
+        If Not SendMouseClickToWindow(hWnd, x, y) Then
+            Dim lParam As IntPtr = MakeLParam(x, y)
+            PostMessage(hWnd, WM_LBUTTONDOWN, CType(MK_LBUTTON, IntPtr), lParam)
+            System.Threading.Thread.Sleep(20)
+            PostMessage(hWnd, WM_LBUTTONUP, IntPtr.Zero, lParam)
+        End If
     End Sub
 
     Private Sub SendGameKey(keys As String)
@@ -630,10 +704,68 @@ Public Class Form1
             Return
         End If
 
-        PostMessage(hWnd, WM_KEYDOWN, CType(vk, IntPtr), IntPtr.Zero)
-        System.Threading.Thread.Sleep(20)
-        PostMessage(hWnd, WM_KEYUP, CType(vk, IntPtr), IntPtr.Zero)
+        If Not SendKeyboardInput(hWnd, vk) Then
+            PostMessage(hWnd, WM_KEYDOWN, CType(vk, IntPtr), IntPtr.Zero)
+            System.Threading.Thread.Sleep(20)
+            PostMessage(hWnd, WM_KEYUP, CType(vk, IntPtr), IntPtr.Zero)
+        End If
     End Sub
+
+    Private Function SendMouseClickToWindow(hWnd As IntPtr, x As Integer, y As Integer) As Boolean
+        Try
+            Dim screenPoint As WinPoint = New WinPoint With {.X = x, .Y = y}
+            If Not ClientToScreen(hWnd, screenPoint) Then
+                Return False
+            End If
+
+            Dim originalMouse As WinPoint
+            GetCursorPos(originalMouse)
+
+            SetForegroundWindow(hWnd)
+            SetCursorPos(screenPoint.X, screenPoint.Y)
+
+            Dim inputs(1) As INPUT
+            inputs(0).type = INPUT_MOUSE
+            inputs(0).union.mi = New MOUSEINPUT With {.dx = 0, .dy = 0, .mouseData = 0, .dwFlags = MOUSEEVENTF_LEFTDOWN, .time = 0, .dwExtraInfo = IntPtr.Zero}
+            inputs(1).type = INPUT_MOUSE
+            inputs(1).union.mi = New MOUSEINPUT With {.dx = 0, .dy = 0, .mouseData = 0, .dwFlags = MOUSEEVENTF_LEFTUP, .time = 0, .dwExtraInfo = IntPtr.Zero}
+
+            Dim size As Integer = Runtime.InteropServices.Marshal.SizeOf(GetType(INPUT))
+            Dim ptr As IntPtr = Runtime.InteropServices.Marshal.AllocHGlobal(size * inputs.Length)
+            Runtime.InteropServices.Marshal.StructureToPtr(inputs(0), ptr, False)
+            Runtime.InteropServices.Marshal.StructureToPtr(inputs(1), ptr + size, False)
+            SendInput(CUInt(inputs.Length), ptr, size)
+            Runtime.InteropServices.Marshal.FreeHGlobal(ptr)
+
+            SetCursorPos(originalMouse.X, originalMouse.Y)
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
+
+    Private Function SendKeyboardInput(hWnd As IntPtr, vk As Integer) As Boolean
+        Try
+            SetForegroundWindow(hWnd)
+
+            Dim inputs(1) As INPUT
+            inputs(0).type = INPUT_KEYBOARD
+            inputs(0).union.ki = New KEYBDINPUT With {.wVk = CType(vk, Short), .wScan = 0, .dwFlags = 0, .time = 0, .dwExtraInfo = IntPtr.Zero}
+            inputs(1).type = INPUT_KEYBOARD
+            inputs(1).union.ki = New KEYBDINPUT With {.wVk = CType(vk, Short), .wScan = 0, .dwFlags = KEYEVENTF_KEYUP, .time = 0, .dwExtraInfo = IntPtr.Zero}
+
+            Dim size As Integer = Runtime.InteropServices.Marshal.SizeOf(GetType(INPUT))
+            Dim ptr As IntPtr = Runtime.InteropServices.Marshal.AllocHGlobal(size * inputs.Length)
+            Runtime.InteropServices.Marshal.StructureToPtr(inputs(0), ptr, False)
+            Runtime.InteropServices.Marshal.StructureToPtr(inputs(1), ptr + size, False)
+            SendInput(CUInt(inputs.Length), ptr, size)
+            Runtime.InteropServices.Marshal.FreeHGlobal(ptr)
+
+            Return True
+        Catch
+            Return False
+        End Try
+    End Function
 
     Private Function TryGetGameHandle(ByRef hWnd As IntPtr) As Boolean
         If AutoIt.AutoItX.WinExists("FC ONLINE", "") = 0 Then
